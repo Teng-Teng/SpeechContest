@@ -4,7 +4,7 @@ SpeechManagement::SpeechManagement() {
 	// initialize containers and properties
 	this->initSpeech();
 
-	// create the 12 speakers
+	// create the 12 contestants
 	this->createSpeaker();
 }
 
@@ -35,7 +35,7 @@ void SpeechManagement::initSpeech() {
 	this->m_Index = 1;
 }
 
-// create the 12 speakers
+// create the 12 contestants
 void SpeechManagement::createSpeaker() {
 	string nameSeed = "ABCDEFGHIJKL";
 
@@ -55,39 +55,36 @@ void SpeechManagement::createSpeaker() {
 	}
 }
 
-// Game flow control function
+// contest flow control function
 void SpeechManagement::startSpeech() {
+
 	// the first round started
+	for (int i = 0; i < 2; i++) {
+		// 1. group by lot
+		this->speechDraw();
 
-	// 1. group by lot
-	this->speechDraw();
+		// 2. start contest
+		this->speechContest();
 
-	// 2. start contest
-	this->speechContest();
+		// 3. show the contestants who advance in the contest
+		this->showScore();
 
-	// 3. show the speakers who advance in the contest
-
-
-	// the second round started
-
-
-	// 1. group by lot
-
-
-	// 2. start contest
-
-
-	// 3. show final result
-
+		// the second round started
+		if (i == 0)
+			this->m_Index++;
+	}
 
 	// 4. save the score to file
+	this->saveRecord();
 
-
+	cout << "The speech contest is over!" << endl;
+	system("pause");
+	system("cls");
 }
 
 // group by lot
 void SpeechManagement::speechDraw() {
-	cout << "The speakers are drawing lots in the " << this->m_Index << " round" << endl;
+	cout << "The contestants are drawing lots in the " << this->m_Index << " round" << endl;
 	cout << "----------------------" << endl;
 	cout << "The speech sequence after the lottery is as follows: " << endl;
 
@@ -120,7 +117,7 @@ void SpeechManagement::speechContest() {
 	// prepare temporary container to store group scores
 	multimap<double, int, greater<double>> groupScore;
 
-	// record the number of people, 6 speakers form a group
+	// record the number of people, 6 contestants form a group
 	int num = 0;
 
 	vector<int> v_Src;
@@ -130,11 +127,11 @@ void SpeechManagement::speechContest() {
 	else
 		v_Src = v2;
 
-	// traverse all speakers to start the contest
+	// traverse all contestants to start the contest
 	for (vector<int>::iterator it = v_Src.begin(); it != v_Src.end(); it++) {
 		num++;
 
-		// judges give score to the speakers
+		// judges give score to the contestants
 		deque<double> d;
 
 		for (int i = 0; i < 10; i++) {
@@ -163,7 +160,7 @@ void SpeechManagement::speechContest() {
 		// put the average score into the map
 		this->map_Speaker[*it].m_Score[this->m_Index - 1] = avg;
 
-		// put scoring data into a temporary container, key--score, value--speaker number
+		// put scoring data into a temporary container, key--score, value--contestant number
 		groupScore.insert(make_pair(avg, *it));
 
 		// take the top 3 for every 6 people
@@ -192,6 +189,45 @@ void SpeechManagement::speechContest() {
 
 	cout << "---------------The "<< this->m_Index << " round of the contest is over---------------" << endl;
 	system("pause");
+}
+
+void SpeechManagement::showScore() {
+	// show the speakers who advance in the contest
+	cout << "The contestants information who advance in the " << this->m_Index 
+		 << " round of the contest is as follows:" << endl;
+
+	vector<int> v;
+
+	if (this->m_Index == 1)
+		v = v2;
+	else
+		v = vVictory;
+
+	for (vector<int>::iterator it = v.begin(); it != v.end(); it++) 
+		cout << "Number: " << *it << " Name: " << this->map_Speaker[*it].m_Name
+		     << " Score: " << this->map_Speaker[*it].m_Score[this->m_Index - 1] << endl;
+
+	cout << endl;
+
+	system("pause");
+	system("cls");
+	this->showMenu();
+}
+
+void SpeechManagement::saveRecord() {
+	ofstream ofs;
+
+	// write files in append manner
+	ofs.open("speech.csv", ios::out | ios::app);
+
+	// write winning contestants information to a file
+	for (vector<int>::iterator it = vVictory.begin(); it != vVictory.end(); it++) {
+		ofs << *it << "," << this->map_Speaker[*it].m_Score[1] << ",";
+	}
+	ofs << endl;
+
+	ofs.close();
+	cout << "Record has been saved!" << endl;
 }
 
 SpeechManagement::~SpeechManagement() {

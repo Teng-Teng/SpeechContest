@@ -8,6 +8,7 @@ using namespace std;
 #include <functional>
 #include <numeric>
 #include <string>
+#include <fstream>
 #include "speaker.h"
 
 class SpeechManagement {
@@ -21,10 +22,10 @@ public:
 	// initialize containers and properties
 	void initSpeech();
 
-	// create the 12 speakers
+	// create the 12 contestants
 	void createSpeaker();
 
-	// game flow control function
+	// contest flow control function
 	void startSpeech();
 
 	// group by lot
@@ -32,18 +33,22 @@ public:
 
 	void speechContest();
 
+	void showScore();
+
+	void saveRecord();
+
 	~SpeechManagement();
 
-	// save speaker number for the first round
+	// save contestant number for the first round
 	vector<int> v1;
 
-	// save the speaker number which advance in the contest for the first round
+	// save the contestant number which advance in the contest for the first round
 	vector<int> v2;
 
-	// save the top three speaker numbers for the second round
+	// save the top three contestant numbers for the second round
 	vector<int> vVictory;
 
-	// store number and corresponding speaker
+	// store number and corresponding contestant
 	map<int, Speaker> map_Speaker;
 
 	// number of rounds

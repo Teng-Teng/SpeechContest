@@ -6,10 +6,10 @@ using namespace std;
 int main() {
 	SpeechManagement sm;
 
-	for (map<int, Speaker>::iterator it = sm.map_Speaker.begin(); it != sm.map_Speaker.end(); it++) {
+	/*for (map<int, Speaker>::iterator it = sm.map_Speaker.begin(); it != sm.map_Speaker.end(); it++) {
 		cout << "Speaker number: " << it->first << " Name: " << it->second.m_Name
 			<< " Score: " << it->second.m_Score[0] << endl;
-	}
+	}*/
 
 	int choice = 0;
 
@@ -22,7 +22,7 @@ int main() {
 		switch (choice) {
 			case 1:
 				// Start speech contest
-
+				sm.startSpeech();
 				break;
 			case 2:
 				// View previous records

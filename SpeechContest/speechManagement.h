@@ -2,7 +2,12 @@
 #include <iostream>
 using namespace std;
 #include <vector>
+#include <deque>
 #include <map>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <string>
 #include "speaker.h"
 
 class SpeechManagement {
@@ -18,6 +23,14 @@ public:
 
 	// create the 12 speakers
 	void createSpeaker();
+
+	// game flow control function
+	void startSpeech();
+
+	// group by lot
+	void speechDraw();
+
+	void speechContest();
 
 	~SpeechManagement();
 

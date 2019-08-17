@@ -1,8 +1,9 @@
-#include <iostream>
-using namespace std;
 #include "speechManagement.h"
 
 int main() {
+	// random number seed
+	srand((unsigned int)time(NULL));
+
 	SpeechManagement sm;
 
 	/*for (map<int, Speaker>::iterator it = sm.map_Speaker.begin(); it != sm.map_Speaker.end(); it++) {
@@ -25,11 +26,11 @@ int main() {
 				break;
 			case 2:
 				// View previous records
-
+				sm.showRecord();
 				break;
 			case 3:
 				// Clear contest record
-
+				sm.clearRecord();
 				break;
 			case 0:
 				// Exit speech contest

@@ -6,6 +6,9 @@ SpeechManagement::SpeechManagement() {
 
 	// create the 12 contestants
 	this->createSpeaker();
+
+	// load previous records
+	this->loadRecord();
 }
 
 void SpeechManagement::showMenu(){
@@ -31,6 +34,7 @@ void SpeechManagement::initSpeech() {
 	this->v2.clear();
 	this->vVictory.clear();
 	this->map_Speaker.clear();
+	this->map_Record.clear();
 
 	this->m_Index = 1;
 }
@@ -76,6 +80,15 @@ void SpeechManagement::startSpeech() {
 
 	// 4. save the score to file
 	this->saveRecord();
+
+	// initialize containers and properties
+	this->initSpeech();
+
+	// create the 12 contestants
+	this->createSpeaker();
+
+	// load previous records
+	this->loadRecord();
 
 	cout << "The speech contest is over!" << endl;
 	system("pause");
@@ -217,7 +230,7 @@ void SpeechManagement::showScore() {
 void SpeechManagement::saveRecord() {
 	ofstream ofs;
 
-	// write files in append manner
+	// write file in append manner
 	ofs.open("speech.csv", ios::out | ios::app);
 
 	// write winning contestants information to a file
@@ -228,6 +241,115 @@ void SpeechManagement::saveRecord() {
 
 	ofs.close();
 	cout << "Record has been saved!" << endl;
+	this->isFileEmpty = false;
+}
+
+// load previous record
+void SpeechManagement::loadRecord() {
+	// read file
+	ifstream ifs("speech.csv", ios::in);
+
+	// file doesn't exist
+	if (!ifs.is_open()) {
+		this->isFileEmpty = true;
+		//cout << "File doesn't exist!" << endl;
+		ifs.close();
+		return;
+	}
+
+	// file has been emptied
+	char ch;
+	ifs >> ch;
+
+	if (ifs.eof()) {
+		//cout << "File is empty!" << endl;
+		this->isFileEmpty = true;
+		ifs.close();
+		return;
+	}
+
+	// file isn't empty
+	this->isFileEmpty = false;
+	ifs.putback(ch);
+
+	string data;
+	int index = 0;
+
+	while (ifs >> data) {
+		vector<string> v;
+
+		// comma position
+		int pos = -1;
+		int start = 0;
+
+		while (true) {
+			pos = data.find(",", start);
+
+			if (pos == -1)
+				break;
+			
+			string temp = data.substr(start, pos - start);
+			v.push_back(temp);
+
+			start = pos + 1;
+		}
+
+		this->map_Record.insert(make_pair(index, v));
+		index++;
+	}
+
+	ifs.close();
+
+	/*for (map<int, vector<string>>::iterator it = map_Record.begin(); it != map_Record.end(); it++) {
+		cout << it->first << " Champion number: " << it->second[0]
+			 << " Score: " << it->second[1] << endl;
+	}*/
+}
+
+// show previous record
+void SpeechManagement::showRecord() {
+	if (this->isFileEmpty)
+		cout << "File doesn't exist or file is empty!" << endl;
+	else {
+		for (int i = 0; i < map_Record.size(); i++) {
+			cout << "The " << i + 1 << " speech contest "
+				<< " Champion number: " << this->map_Record[i][0] << " Score: " << this->map_Record[i][1] << " "
+				<< " Second place number: " << this->map_Record[i][2] << " Score: " << this->map_Record[i][3] << " "
+				<< " Third place number: " << this->map_Record[i][4] << " Score: " << this->map_Record[i][5] << endl;
+		}
+	}
+
+	system("pause");
+	system("cls");
+}
+
+void SpeechManagement::clearRecord() {
+	cout << "Are you sure to empty the file?" << endl;
+	cout << "1. Yes" << endl;
+	cout << "2. No" << endl;
+
+	int select = 0;
+	cin >> select;
+
+	if (select == 1) {
+		// open mode--ios::trunc, if the file exists, delete the file and recreate it
+		ofstream ofs("speech.csv", ios::trunc);
+		ofs.close();
+
+		// initialize containers and properties
+		this->initSpeech();
+
+		// create the 12 contestants
+		this->createSpeaker();
+
+		// load previous records
+		this->loadRecord();
+
+		cout << "Empty the file successfully!" << endl;
+	}
+
+	system("pause");
+	system("cls");
 }
 
 SpeechManagement::~SpeechManagement() {

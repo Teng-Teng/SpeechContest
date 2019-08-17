@@ -9,6 +9,7 @@ using namespace std;
 #include <numeric>
 #include <string>
 #include <fstream>
+#include <ctime>
 #include "speaker.h"
 
 class SpeechManagement {
@@ -37,6 +38,14 @@ public:
 
 	void saveRecord();
 
+	// load previous record
+	void loadRecord();
+
+	// show previous record
+	void showRecord();
+
+	void clearRecord();
+
 	~SpeechManagement();
 
 	// save contestant number for the first round
@@ -53,4 +62,10 @@ public:
 
 	// number of rounds
 	int m_Index;
+
+	// check if the file is empty
+	bool isFileEmpty;
+
+	// store previous speech contest records
+	map<int, vector<string>> map_Record;
 };
